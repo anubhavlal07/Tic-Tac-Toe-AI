@@ -5,8 +5,8 @@ const cellDivs = document.querySelectorAll(".game-cell");
 
 // Temp Sections Above
 let origBoard;
-const HUMAN_PLAYER = "X";
-const AI_PLAYER = "O";
+const HUMAN_PLAYER = "O";
+const AI_PLAYER = "X";
 
 resetDiv.addEventListener("click", onStartGame);
 
@@ -25,8 +25,8 @@ const winCombos = [
 
 const cells = document.getElementsByClassName("game-cell");
 onStartGame();
-
 function onStartGame() {
+  console.clear();
   // console.log('Starting Game');
   document.querySelector(".end-game").style.display = "none";
   origBoard = Array.from(Array(9).keys());
@@ -38,17 +38,24 @@ function onStartGame() {
     cells[i].classList.remove("won");
     cells[i].classList.remove("tie");
     statusDiv.style.display = "none";
+    resetDiv.style.display = "none";
     cells[i].addEventListener("click", onTurnClick, false);
   }
+  onTurn(botPicksSpot(), AI_PLAYER); // remove this if player wants to start first
 }
 
 function onTurnClick(e) {
-  // console.log(e.target.id);
+  resetDiv.style.display = "block";
+  console.log(e.target.id);
   const { id: squareId } = e.target;
   if (typeof origBoard[squareId] === "number") {
     onTurn(squareId, HUMAN_PLAYER);
     if (!onCheckGameTie()) {
-      onTurn(botPicksSpot(), AI_PLAYER);
+      // 0.8 sec delay
+      setTimeout(function () {
+        onTurn(botPicksSpot(), AI_PLAYER);
+        onCheckGameTie();
+      }, 800);
     }
   }
 }
@@ -56,17 +63,14 @@ function onTurnClick(e) {
 function onTurn(squareId, player) {
   origBoard[squareId] = player;
   console.log(player);
-  if (player === "X") {
-    document.getElementById(squareId).classList.add("x");
+  if (player === "O") {
+    document.getElementById(squareId).classList.add("o");
   } else {
-    // Setting a delay of .8 seconds
-    setTimeout(function () {
-      document.getElementById(squareId).classList.add("o");
-    }, 800);
+    document.getElementById(squareId).classList.add("x");
   }
 
   let isGameWon = onCheckWin(origBoard, player);
-  // console.log(isGameWon)
+  // console.log(isGameWon);
   if (isGameWon) {
     onGameOver(isGameWon);
   }
@@ -97,12 +101,11 @@ function onCheckGameTie() {
     }
     onDeclareWinner("A Tie");
     setTimeout(function () {
-      location.reload();
-    }, 300);
+      onStartGame();
+    }, 800);
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
 function onGameOver({ index, player }) {
   for (let i of winCombos[index]) {
@@ -110,9 +113,7 @@ function onGameOver({ index, player }) {
     if (winner == "win") {
       cellDivs[i].classList.add("won");
     } else {
-      setTimeout(function () {
-        cellDivs[i].classList.add("tie");
-      }, 850);
+      cellDivs[i].classList.add("tie");
     }
   }
   for (let i = 0; i < cells.length; i++) {
@@ -126,10 +127,8 @@ function onGameOver({ index, player }) {
 function onDeclareWinner(who) {
   // console.log('Result: ', who);
   // document.querySelector(".end-game").style.display = "block";
-  setTimeout(function () {
-    statusDiv.style.display = "block";
-    statusDiv.innerHTML = `<span>${who}</span>`;
-  }, 850);
+  statusDiv.style.display = "block";
+  statusDiv.innerHTML = `<span>${who}</span>`;
 }
 
 /*** Bot moves ***/
@@ -166,12 +165,10 @@ function minimax(newBoard, player) {
     } else {
       let result = minimax(newBoard, AI_PLAYER);
       move.score = result.score;
-    } // end of if/else block
-
+    }
     newBoard[availableSpots[i]] = move.index;
     moves.push(move);
-  } // end of for loop
-
+  }
   let bestMove;
 
   if (player === AI_PLAYER) {
@@ -181,7 +178,7 @@ function minimax(newBoard, player) {
         bestScore = moves[i].score;
         bestMove = i;
       }
-    } // end of for loop
+    }
   } else {
     let bestScore = 10000;
     for (let i = 0; i < moves.length; i++) {
@@ -194,34 +191,35 @@ function minimax(newBoard, player) {
 
   return moves[bestMove];
 } // end of minimax func()
-// Disabled Input from keyboard
-(document.onkeydown = function (event) {
-  if (event.keyCode == 123) {
-    return false;
-  } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {
-    return false;
-  } else if (event.ctrlKey && event.shiftKey && event.keyCode == 67) {
-    return false;
-  } else if (event.ctrlKey && event.shiftKey && event.keyCode == 86) {
-    return false;
-  } else if (event.ctrlKey && event.shiftKey && event.keyCode == 117) {
-    return false;
-  } else if (event.ctrlKey && event.keyCode == 85) {
-    return false;
-  }
-}),
-  false;
 
-if (document.addEventListener) {
-  document.addEventListener(
-    "contextmenu",
-    function (e) {
-      e.preventDefault();
-    },
-    false
-  );
-} else {
-  document.attachEvent("oncontextmenu", function () {
-    window.event.returnValue = false;
-  });
-}
+// Disabled Input from keyboard
+// (document.onkeydown = function (event) {
+//   if (event.keyCode == 123) {
+//     return false;
+//   } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {
+//     return false;
+//   } else if (event.ctrlKey && event.shiftKey && event.keyCode == 67) {
+//     return false;
+//   } else if (event.ctrlKey && event.shiftKey && event.keyCode == 86) {
+//     return false;
+//   } else if (event.ctrlKey && event.shiftKey && event.keyCode == 117) {
+//     return false;
+//   } else if (event.ctrlKey && event.keyCode == 85) {
+//     return false;
+//   }
+// }),
+//   false;
+
+// if (document.addEventListener) {
+//   document.addEventListener(
+//     "contextmenu",
+//     function (e) {
+//       e.preventDefault();
+//     },
+//     false
+//   );
+// } else {
+//   document.attachEvent("oncontextmenu", function () {
+//     window.event.returnValue = false;
+//   });
+// }

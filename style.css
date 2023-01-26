@@ -14,8 +14,8 @@ body {
 
 .container {
   background: #14bdac;
-  margin: 40px;
-  padding: 30px;
+  margin: 15px;
+  padding: 25px;
   border-radius: 25px;
 }
 
@@ -29,10 +29,9 @@ body {
 
 .status-action {
   display: flex;
-  margin-top: 15px;
-  font-size: 25px;
+  margin-top: 5px;
+  font-size: 20px;
   justify-content: space-around;
-  height: 20px;
 }
 
 .status span {
@@ -53,7 +52,7 @@ body {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   grid-gap: 15px;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
 .game-cell {
@@ -62,25 +61,22 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  height: 150px;
-  width: 150px;
-}
-
-.x,
-.o {
-  cursor: default;
+  height: 140px;
+  width: 140px;
 }
 
 .x::after {
   content: "×";
-  font-size: 150px;
+  font-size: 130px;
+  cursor: not-allowed;
 }
 
 .o::after {
   content: "○";
   color: #f2ebd3;
-  font-size: 175px;
+  font-size: 130px;
   padding-bottom: 20px;
+  cursor: not-allowed;
 }
 
 .won::after {
@@ -93,21 +89,21 @@ body {
 
 @media only screen and (max-width: 1024px) {
   .game-grid {
-    margin-top: 40px;
+    margin-top: 35px;
     grid-gap: 15px;
   }
 
   .game-cell {
-    height: 150px;
-    width: 150px;
+    height: 140px;
+    width: 140px;
   }
 
   .x::after {
-    font-size: 125px;
+    font-size: 120px;
   }
 
   .o::after {
-    font-size: 155px;
+    font-size: 120px;
     padding-bottom: 20px;
   }
 }
@@ -131,4 +127,4 @@ body {
     font-size: 100px;
     padding-bottom: 20px;
   }
-}F
+}
