@@ -107,7 +107,7 @@ function onCheckGameTie() {
     }
     onDeclareWinner("A Tie");
     setTimeout(function () {
-      onStartGame();
+      onResetGame();
     }, 800);
     return true;
   }
