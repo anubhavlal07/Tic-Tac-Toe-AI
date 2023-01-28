@@ -3,12 +3,12 @@ const resetDiv = document.querySelector(".reset");
 const statusDiv = document.querySelector(".status");
 const cellDivs = document.querySelectorAll(".game-cell");
 
+resetDiv.addEventListener("click", onResetGame);
+
 // Temp Sections Above
 let origBoard;
 const HUMAN_PLAYER = "O";
 const AI_PLAYER = "X";
-
-resetDiv.addEventListener("click", onStartGame);
 
 const winCombos = [
   [0, 1, 2],
@@ -24,6 +24,12 @@ const winCombos = [
 ];
 
 const cells = document.getElementsByClassName("game-cell");
+
+function onResetGame() {
+  onStartGame();
+  choice();
+}
+
 onStartGame();
 function onStartGame() {
   console.clear();
@@ -41,7 +47,7 @@ function onStartGame() {
     resetDiv.style.display = "none";
     cells[i].addEventListener("click", onTurnClick, false);
   }
-  onTurn(botPicksSpot(), AI_PLAYER); // remove this if player wants to start first
+  // onTurn(botPicksSpot(), AI_PLAYER); // remove this if player wants to start first
 }
 
 function onTurnClick(e) {
@@ -191,35 +197,3 @@ function minimax(newBoard, player) {
 
   return moves[bestMove];
 } // end of minimax func()
-
-// Disabled Input from keyboard
-// (document.onkeydown = function (event) {
-//   if (event.keyCode == 123) {
-//     return false;
-//   } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {
-//     return false;
-//   } else if (event.ctrlKey && event.shiftKey && event.keyCode == 67) {
-//     return false;
-//   } else if (event.ctrlKey && event.shiftKey && event.keyCode == 86) {
-//     return false;
-//   } else if (event.ctrlKey && event.shiftKey && event.keyCode == 117) {
-//     return false;
-//   } else if (event.ctrlKey && event.keyCode == 85) {
-//     return false;
-//   }
-// }),
-//   false;
-
-// if (document.addEventListener) {
-//   document.addEventListener(
-//     "contextmenu",
-//     function (e) {
-//       e.preventDefault();
-//     },
-//     false
-//   );
-// } else {
-//   document.attachEvent("oncontextmenu", function () {
-//     window.event.returnValue = false;
-//   });
-// }
