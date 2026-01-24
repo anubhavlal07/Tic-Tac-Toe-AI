@@ -5,8 +5,9 @@ const cellDivs = document.querySelectorAll(".game-cell");
 
 resetDiv.addEventListener("click", onResetGame);
 
-// Temp Sections Above
+// Game State
 let origBoard;
+let isGameActive = true;
 const HUMAN_PLAYER = "O";
 const AI_PLAYER = "X";
 
@@ -32,43 +33,70 @@ function onResetGame() {
 
 onStartGame();
 function onStartGame() {
-  console.clear();
-  // console.log('Starting Game');
   document.querySelector(".end-game").style.display = "none";
   origBoard = Array.from(Array(9).keys());
-  // console.table(origBoard);
-  // console.log(cells);
+  isGameActive = true;
+
   for (let i = 0; i < cells.length; i++) {
     cells[i].classList.remove("x");
     cells[i].classList.remove("o");
     cells[i].classList.remove("won");
     cells[i].classList.remove("tie");
+    cells[i].classList.remove("shake");
     statusDiv.style.display = "none";
     resetDiv.style.display = "none";
     cells[i].addEventListener("click", onTurnClick, false);
   }
-  // onTurn(botPicksSpot(), AI_PLAYER); // remove this if player wants to start first
+  updateStatus("Make your choice...");
+}
+
+function updateStatus(message) {
+  statusDiv.style.display = "block";
+  statusDiv.innerHTML = `<span>${message}</span>`;
 }
 
 function onTurnClick(e) {
-  resetDiv.style.display = "block";
-  console.log(e.target.id);
+  // Ignore clicks if game is not active
+  if (!isGameActive) {
+    return;
+  }
+
   const { id: squareId } = e.target;
-  if (typeof origBoard[squareId] === "number") {
-    onTurn(squareId, HUMAN_PLAYER);
-    if (!onCheckGameTie()) {
-      // 0.8 sec delay
-      setTimeout(function () {
-        onTurn(botPicksSpot(), AI_PLAYER);
-        onCheckGameTie();
-      }, 800);
-    }
+
+  // Check if cell is already occupied
+  if (typeof origBoard[squareId] !== "number") {
+    // Add shake animation for visual feedback
+    e.target.classList.add("shake");
+    setTimeout(() => {
+      e.target.classList.remove("shake");
+    }, 500);
+    return;
+  }
+
+  resetDiv.style.display = "block";
+
+  // Make human move
+  onTurn(squareId, HUMAN_PLAYER);
+
+  if (!onCheckGameTie()) {
+    // Disable further clicks while AI is thinking
+    isGameActive = false;
+    updateStatus("AI is thinking...");
+
+    // 800ms delay for AI move
+    setTimeout(function () {
+      onTurn(botPicksSpot(), AI_PLAYER);
+      if (!onCheckGameTie()) {
+        isGameActive = true;
+        updateStatus("Your Turn");
+      }
+    }, 800);
   }
 }
 
 function onTurn(squareId, player) {
   origBoard[squareId] = player;
-  console.log(player);
+
   if (player === "O") {
     document.getElementById(squareId).classList.add("o");
   } else {
@@ -76,7 +104,6 @@ function onTurn(squareId, player) {
   }
 
   let isGameWon = onCheckWin(origBoard, player);
-  // console.log(isGameWon);
   if (isGameWon) {
     onGameOver(isGameWon);
   }
@@ -101,19 +128,21 @@ function onCheckWin(board, player) {
 
 function onCheckGameTie() {
   if (emptySquares().length === 0) {
+    isGameActive = false;
+
     for (let i = 0; i < cells.length; i++) {
       cellDivs[i].classList.add("tie");
       cells[i].removeEventListener("click", onTurnClick, false);
     }
-    onDeclareWinner("A Tie");
-    setTimeout(function () {
-      onResetGame();
-    }, 800);
+
+    onDeclareWinner("It's a Tie!");
     return true;
   }
   return false;
 }
 function onGameOver({ index, player }) {
+  isGameActive = false;
+
   for (let i of winCombos[index]) {
     const winner = player === HUMAN_PLAYER ? "win" : "tie";
     if (winner == "win") {
@@ -122,17 +151,16 @@ function onGameOver({ index, player }) {
       cellDivs[i].classList.add("tie");
     }
   }
+
   for (let i = 0; i < cells.length; i++) {
     cells[i].removeEventListener("click", onTurnClick, false);
   }
 
-  const result = player === HUMAN_PLAYER ? "You Win" : "You Lose";
+  const result = player === HUMAN_PLAYER ? "You Win! 🎉" : "You Lose! 😔";
   onDeclareWinner(result);
 }
 
 function onDeclareWinner(who) {
-  // console.log('Result: ', who);
-  // document.querySelector(".end-game").style.display = "block";
   statusDiv.style.display = "block";
   statusDiv.innerHTML = `<span>${who}</span>`;
 }

@@ -1,29 +1,61 @@
-window.onload = choice();
+// Custom Game Modal Functions
+const choiceModal = document.getElementById('choiceModal');
+const infoToast = document.getElementById('infoToast');
+const infoMessage = document.getElementById('infoMessage');
+
+// Show choice modal on load
+window.onload = () => {
+  choice();
+};
 
 function choice() {
-  swal("Who plays first ?", {
-    buttons: {
-      cancel: "Human",
-      catch: {
-        text: "Machine",
-        value: "ai",
-      },
-    },
-    timer: 5000,
-  }).then((value) => {
-    if (value === "ai") {
-      swal("You preferred AI", {
-        buttons: false,
-        timer: 800,
-      });
-      onTurn(botPicksSpot(), AI_PLAYER);
-    } else {
-      swal("You preferred human", {
-        buttons: false,
-        timer: 800,
-      });
-    }
+  return new Promise((resolve) => {
+    // Show modal
+    choiceModal.classList.add('active');
+
+    // Get player cards
+    const playerCards = choiceModal.querySelectorAll('.player-card');
+
+    // Handle card clicks
+    const handleClick = (e) => {
+      const card = e.currentTarget;
+      const choice = card.dataset.choice;
+
+      // Remove event listeners
+      playerCards.forEach(c => c.removeEventListener('click', handleClick));
+
+      // Hide modal
+      choiceModal.classList.remove('active');
+
+      // Show toast message and start game
+      if (choice === 'ai') {
+        showToast('AI starts first! Get ready...');
+        updateStatus("AI is thinking...");
+        setTimeout(() => {
+          onTurn(botPicksSpot(), AI_PLAYER);
+          updateStatus("Your Turn");
+          isGameActive = true;
+        }, 1200);
+      } else {
+        showToast('You start first! Make your move!');
+        updateStatus("Your Turn");
+        isGameActive = true;
+      }
+
+      resolve(choice);
+    };
+
+    playerCards.forEach(card => card.addEventListener('click', handleClick));
   });
+}
+
+function showToast(message) {
+  infoMessage.textContent = message;
+  infoToast.classList.add('active');
+
+  setTimeout(() => {
+    infoToast.classList.remove('active');
+  }, 2000);
 }
 
 // Disabled Input from keyboard

@@ -6,12 +6,42 @@
   <meta name="viewport"
     content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#2196F3">
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <title>Tic Tac Toe</title>
+  <title>Tic Tac Toe - Material Design</title>
 </head>
 
 <body>
+  <!-- Custom Game Modal -->
+  <div class="modal-backdrop" id="choiceModal">
+    <div class="game-modal">
+      <h2 class="game-modal-title">Choose Your Player</h2>
+      <p class="game-modal-subtitle">Select who will make the first move</p>
+      <div class="player-selection">
+        <div class="player-card" data-choice="human">
+          <div class="player-icon">
+            <span class="player-symbol">○</span>
+          </div>
+          <h3>You Start</h3>
+          <p>Play as O</p>
+        </div>
+        <div class="vs-divider">vs</div>
+        <div class="player-card" data-choice="ai">
+          <div class="player-icon ai-icon">
+            <span class="player-symbol">×</span>
+          </div>
+          <h3>AI Starts</h3>
+          <p>AI plays as X</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Toast -->
+  <div class="info-toast" id="infoToast">
+    <div class="toast-content" id="infoMessage"></div>
+  </div>
+
   <div class="container">
     <h1 class="title">Tic <span>Tac</span> Toe</h1>
     <div class="end-game">
@@ -19,7 +49,7 @@
     </div>
     <div class="status-action">
       <div class="status"></div>
-      <div class="reset">Reset</div>
+      <button class="reset">Reset</button>
     </div>
     <div class="game-grid">
       <div class="game-cell" id="0"></div>
