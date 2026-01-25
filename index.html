@@ -7,6 +7,14 @@
     content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="theme-color" content="#2196F3">
+  <meta name="description" content="Play Tic Tac Toe against an unbeatable AI with Material Design">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TicTacToe">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="stylesheet" href="style.css">
   <title>Tic Tac Toe - Material Design</title>
 </head>
@@ -43,6 +51,25 @@
   </div>
 
   <div class="container">
+    <div class="header-controls">
+      <div class="score-tracker">
+        <div class="score-item">
+          <span class="score-label">Wins</span>
+          <span class="score-value" id="wins">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Ties</span>
+          <span class="score-value" id="ties">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Losses</span>
+          <span class="score-value" id="losses">0</span>
+        </div>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
     <h1 class="title">Tic <span>Tac</span> Toe</h1>
     <div class="end-game">
       <div class="text status-action"></div>

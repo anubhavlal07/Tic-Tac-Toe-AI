@@ -2,6 +2,7 @@
 const resetDiv = document.querySelector(".reset");
 const statusDiv = document.querySelector(".status");
 const cellDivs = document.querySelectorAll(".game-cell");
+const container = document.querySelector(".container");
 
 resetDiv.addEventListener("click", onResetGame);
 
@@ -27,6 +28,12 @@ const winCombos = [
 const cells = document.getElementsByClassName("game-cell");
 
 function onResetGame() {
+  // Add rotation animation
+  container.classList.add('reset-animation');
+  setTimeout(() => {
+    container.classList.remove('reset-animation');
+  }, 600);
+
   onStartGame();
   choice();
 }
@@ -43,6 +50,7 @@ function onStartGame() {
     cells[i].classList.remove("won");
     cells[i].classList.remove("tie");
     cells[i].classList.remove("shake");
+    cells[i].classList.remove("win-line");
     statusDiv.style.display = "none";
     resetDiv.style.display = "none";
     cells[i].addEventListener("click", onTurnClick, false);
@@ -135,6 +143,11 @@ function onCheckGameTie() {
       cells[i].removeEventListener("click", onTurnClick, false);
     }
 
+    // Update score
+    if (window.updateScore) {
+      window.updateScore('tie');
+    }
+
     onDeclareWinner("It's a Tie!");
     return true;
   }
@@ -143,17 +156,27 @@ function onCheckGameTie() {
 function onGameOver({ index, player }) {
   isGameActive = false;
 
+  // Add winning line animation
   for (let i of winCombos[index]) {
     const winner = player === HUMAN_PLAYER ? "win" : "tie";
-    if (winner == "win") {
-      cellDivs[i].classList.add("won");
-    } else {
-      cellDivs[i].classList.add("tie");
-    }
+    setTimeout(() => {
+      cellDivs[i].classList.add("win-line");
+      if (winner == "win") {
+        cellDivs[i].classList.add("won");
+      } else {
+        cellDivs[i].classList.add("tie");
+      }
+    }, i * 100); // Stagger animation
   }
 
   for (let i = 0; i < cells.length; i++) {
     cells[i].removeEventListener("click", onTurnClick, false);
+  }
+
+  // Update score
+  const scoreResult = player === HUMAN_PLAYER ? 'win' : 'loss';
+  if (window.updateScore) {
+    window.updateScore(scoreResult);
   }
 
   const result = player === HUMAN_PLAYER ? "You Win! 🎉" : "You Lose! 😔";

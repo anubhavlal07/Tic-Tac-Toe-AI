@@ -3,9 +3,86 @@ const choiceModal = document.getElementById('choiceModal');
 const infoToast = document.getElementById('infoToast');
 const infoMessage = document.getElementById('infoMessage');
 
+// Score tracking
+const scoreElements = {
+  wins: document.getElementById('wins'),
+  ties: document.getElementById('ties'),
+  losses: document.getElementById('losses')
+};
+
+let scores = {
+  wins: 0,
+  ties: 0,
+  losses: 0
+};
+
+// Load scores from localStorage
+function loadScores() {
+  const savedScores = localStorage.getItem('tictactoe_scores');
+  if (savedScores) {
+    scores = JSON.parse(savedScores);
+    updateScoreDisplay();
+  }
+}
+
+// Save scores to localStorage
+function saveScores() {
+  localStorage.setItem('tictactoe_scores', JSON.stringify(scores));
+}
+
+// Update score display
+function updateScoreDisplay() {
+  scoreElements.wins.textContent = scores.wins;
+  scoreElements.ties.textContent = scores.ties;
+  scoreElements.losses.textContent = scores.losses;
+}
+
+// Dark mode toggle
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = themeToggle.querySelector('.theme-icon');
+
+function loadTheme() {
+  const savedTheme = localStorage.getItem('tictactoe_theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeIcon.textContent = '☀️';
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  themeIcon.textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('tictactoe_theme', isDark ? 'dark' : 'light');
+}
+
+themeToggle.addEventListener('click', toggleTheme);
+
+// Update score based on game result
+window.updateScore = function (result) {
+  if (result === 'win') {
+    scores.wins++;
+  } else if (result === 'tie') {
+    scores.ties++;
+  } else if (result === 'loss') {
+    scores.losses++;
+  }
+  updateScoreDisplay();
+  saveScores();
+};
+
 // Show choice modal on load
 window.onload = () => {
+  loadScores();
+  loadTheme();
   choice();
+
+  // Register service worker for PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then((reg) => console.log('Service Worker registered', reg))
+      .catch((err) => console.log('Service Worker registration failed', err));
+  }
 };
 
 function choice() {
@@ -56,36 +133,4 @@ function showToast(message) {
   setTimeout(() => {
     infoToast.classList.remove('active');
   }, 2000);
-}
-
-// Disabled Input from keyboard
-(document.onkeydown = function (event) {
-  if (event.keyCode == 123) {
-    return false;
-  } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {
-    return false;
-  } else if (event.ctrlKey && event.shiftKey && event.keyCode == 67) {
-    return false;
-  } else if (event.ctrlKey && event.shiftKey && event.keyCode == 86) {
-    return false;
-  } else if (event.ctrlKey && event.shiftKey && event.keyCode == 117) {
-    return false;
-  } else if (event.ctrlKey && event.keyCode == 85) {
-    return false;
-  }
-}),
-  false;
-
-if (document.addEventListener) {
-  document.addEventListener(
-    "contextmenu",
-    function (e) {
-      e.preventDefault();
-    },
-    false
-  );
-} else {
-  document.attachEvent("oncontextmenu", function () {
-    window.event.returnValue = false;
-  });
 }
