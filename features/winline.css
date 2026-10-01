@@ -1,0 +1,50 @@
+.winline {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.winline-stroke {
+    --winline: var(--x);
+    --winline-glow: var(--x-soft);
+    fill: none;
+    stroke: var(--winline);
+    stroke-linecap: round;
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 6px var(--winline-glow));
+    filter: drop-shadow(0 0 calc(var(--board) * 0.018) color-mix(in srgb, var(--winline) 45%, transparent));
+    animation: winline-draw 0.45s var(--ease, ease-out) 0.25s both;
+}
+
+.winline-o .winline-stroke {
+    --winline: var(--o);
+    --winline-glow: var(--o-soft);
+}
+
+@keyframes winline-draw {
+    0% {
+        stroke-dashoffset: 1;
+        opacity: 0;
+    }
+
+    1% {
+        opacity: 1;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .winline-stroke {
+        animation: none;
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+}
