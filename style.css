@@ -1005,10 +1005,14 @@ body.dark-mode .icon-sun {
 
     .topbar {
         padding-top: 8px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
     }
 
     .title {
         font-size: 2.8rem;
+        white-space: nowrap;
     }
 
     .title-sub {
@@ -1070,6 +1074,12 @@ body.dark-mode .icon-sun {
 
     .topbar {
         padding-top: 0;
+        gap: 8px;
+    }
+
+    .tool-btn {
+        width: 38px;
+        height: 38px;
     }
 
     .title {
