@@ -1,0 +1,205 @@
+.coach-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.coach-loss {
+    border-color: color-mix(in srgb, var(--x) 30%, var(--line));
+}
+
+.coach-draw {
+    border-color: color-mix(in srgb, var(--o) 30%, var(--line));
+}
+
+.coach-loss::before,
+.coach-draw::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--x);
+}
+
+.coach-draw::before {
+    background: var(--o);
+}
+
+.coach-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.coach-copy {
+    flex: 1 1 150px;
+    min-width: 0;
+    display: grid;
+    gap: 6px;
+}
+
+.insight-card .coach-lead {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.insight-card .coach-better {
+    color: var(--ink);
+}
+
+.coach-card .mini-board,
+.coach-review .mini-board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+
+.coach-card .mini-cell,
+.coach-review .mini-cell {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.coach-ghost {
+    opacity: 0.75;
+}
+
+.coach-ghost-good {
+    opacity: 0.6;
+}
+
+.coach-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    margin-top: 2px;
+    font-size: 0.76rem;
+    color: var(--muted);
+}
+
+.coach-key {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.coach-key::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    flex: none;
+}
+
+.coach-key-bad::before {
+    background: var(--x-soft);
+    box-shadow: inset 0 0 0 2px var(--x);
+}
+
+.coach-key-good::before {
+    background: var(--o-soft);
+    box-shadow: inset 0 0 0 2px var(--o);
+}
+
+.insight-card .coach-review-btn {
+    margin-top: 0;
+    justify-self: start;
+    padding: 4px 0;
+}
+
+.coach-review-wrap {
+    margin-top: 16px;
+}
+
+.coach-review {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+}
+
+.coach-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+
+.coach-step-bad {
+    border-color: var(--x);
+    background: color-mix(in srgb, var(--x-soft) 60%, var(--surface-2));
+}
+
+.coach-step-text {
+    min-width: 0;
+    display: grid;
+    gap: 6px;
+}
+
+.coach-step-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+}
+
+.coach-step-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink);
+}
+
+.coach-step-text p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.coach-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.coach-badge-good {
+    color: var(--o);
+    background: var(--o-soft);
+}
+
+.coach-badge-bad {
+    color: var(--surface);
+    background: var(--x);
+}
+
+.coach-badge-ai {
+    color: var(--x);
+    background: var(--x-soft);
+}
+
+.coach-badge-muted {
+    color: var(--muted);
+    border-color: var(--line);
+}
+
+@media (max-width: 360px) {
+    .coach-body {
+        gap: 12px;
+    }
+
+    .coach-step {
+        gap: 10px;
+        padding: 8px;
+    }
+}
