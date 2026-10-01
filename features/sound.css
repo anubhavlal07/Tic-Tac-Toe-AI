@@ -1,0 +1,7 @@
+#soundBtn svg {
+    transition: transform 0.2s ease;
+}
+
+#soundBtn:active svg {
+    transform: scale(0.9);
+}
