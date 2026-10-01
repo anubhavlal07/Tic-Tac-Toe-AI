@@ -304,6 +304,10 @@ body.dark-mode .icon-sun {
 
 .status span {
     display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
     animation: fadeSwap 0.35s var(--ease);
 }
 
