@@ -1,6 +1,6 @@
 # Tic-Tac-Toe AI
 
-An unbeatable Tic-Tac-Toe game featuring a sophisticated AI opponent powered by the Minimax algorithm. Built with vanilla JavaScript and modern web technologies, this Progressive Web App (PWA) delivers a premium gaming experience with Material Design aesthetics.
+An unbeatable Tic-Tac-Toe game featuring a sophisticated AI opponent powered by the Minimax algorithm. Built with vanilla JavaScript and modern web technologies, this Progressive Web App (PWA) delivers a clean, editorial look that adapts to phones, tablets and desktops.
 
 ## 🎮 Live Demo
 
@@ -9,16 +9,16 @@ An unbeatable Tic-Tac-Toe game featuring a sophisticated AI opponent powered by 
 ## ✨ Features
 
 ### 🤖 Intelligent AI
-- **Minimax Algorithm**: Unbeatable AI that evaluates all possible game outcomes
+- **Trap AI** (`trap_ai.js`): Never loses, and among all non-losing moves picks the one most likely to make you blunder into a fork, always winning as fast as possible. A perfect player can still force a draw, since Tic-Tac-Toe is a solved draw
 - **Strategic Gameplay**: Perfect decision-making that adapts to your moves
 - **Difficulty Options**: Choose who starts first - you or the AI
 
 ### 🎨 Modern Design
-- **Material Design UI**: Clean, intuitive interface with smooth animations
-- **Dark Mode**: Eye-friendly dark theme with seamless toggle
-- **Responsive Layout**: Fully optimized for mobile, tablet, and desktop
-- **Animated Win Lines**: Visual celebration when you achieve victory (or a draw!)
-- **Smooth Transitions**: Board rotation animation on reset for a polished feel
+- **Editorial UI**: Warm paper and ink palette with CSS-drawn X and O marks
+- **Dark Mode**: Follows your system theme by default, with a manual toggle
+- **Adaptive Layout**: Single column with a bottom-sheet picker on phones; board beside a side panel on desktops, tablets in landscape and phones in landscape
+- **Animated Win Lines**: The winning line lights up and the rest of the board fades
+- **Smooth Transitions**: Board flips on a new game; motion is reduced when the OS asks for it
 
 ### 📊 Progress Tracking
 - **Score Persistence**: Tracks wins, losses, and ties using localStorage
@@ -48,7 +48,8 @@ An unbeatable Tic-Tac-Toe game featuring a sophisticated AI opponent powered by 
 ```
 Tic-Tac-Toe-AI/
 ├── index.html          # Main HTML structure
-├── style.css           # Complete styling with light/dark themes
+├── trap_ai.js          # Trap-setting perfect-play AI
+├── style.css           # Responsive layout and light/dark themes
 ├── index.js            # Game logic and UI interactions
 ├── minimax_algo.js     # AI implementation with Minimax algorithm
 ├── manifest.json       # PWA manifest configuration
@@ -117,18 +118,21 @@ Toggle between light and dark modes using the theme button in the header.
 Edit CSS custom properties in `style.css` to customize the color scheme:
 ```css
 :root {
-  --primary: #2196F3;
-  --primary-dark: #1976D2;
-  --accent: #FF9800;
-  /* ... more variables */
+  --bg: #f4f1ea;
+  --surface: #fffdf8;
+  --ink: #1d1b16;
+  --x: #e4572e;
+  --o: #148f82;
 }
 ```
 
+Dark mode overrides the same variables under `body.dark-mode`.
+
 ## 📱 Browser Support
 
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
+- Chrome/Edge 105+
+- Firefox 121+
+- Safari 16+
 - Mobile browsers (iOS Safari, Chrome Mobile)
 
 ## 🤝 Contributing

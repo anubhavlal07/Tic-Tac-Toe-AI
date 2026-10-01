@@ -1,9 +1,10 @@
-const CACHE_NAME = 'tictactoe-v1';
+const CACHE_NAME = 'tictactoe-v3';
 const urlsToCache = [
     './',
     './index.html',
     './style.css',
     './index.js',
+    './trap_ai.js',
     './minimax_algo.js',
     './icon-192.png',
     './icon-512.png',

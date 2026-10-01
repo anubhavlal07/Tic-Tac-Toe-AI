@@ -94,7 +94,7 @@ function onTurnClick(e) {
     // 800ms delay for AI move
     setTimeout(function () {
       onTurn(botPicksSpot(), AI_PLAYER);
-      if (!onCheckGameTie()) {
+      if (!onCheckWin(origBoard, AI_PLAYER) && !onCheckGameTie()) {
         isGameActive = true;
         updateStatus("Your Turn");
       }
@@ -194,8 +194,10 @@ function emptySquares() {
   return origBoard.filter((item) => typeof item === "number");
 }
 
+const trapSolver = TrapAI.createSolver(AI_PLAYER, HUMAN_PLAYER);
+
 function botPicksSpot() {
-  return minimax(origBoard, AI_PLAYER).index;
+  return trapSolver.bestMove(origBoard);
 }
 
 function minimax(newBoard, player) {

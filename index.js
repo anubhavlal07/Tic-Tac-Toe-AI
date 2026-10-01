@@ -39,20 +39,21 @@ function updateScoreDisplay() {
 
 // Dark mode toggle
 const themeToggle = document.getElementById('themeToggle');
-const themeIcon = themeToggle.querySelector('.theme-icon');
+
+function applyTheme(isDark) {
+  document.body.classList.toggle('dark-mode', isDark);
+  themeToggle.setAttribute('aria-pressed', String(isDark));
+}
 
 function loadTheme() {
   const savedTheme = localStorage.getItem('tictactoe_theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-mode');
-    themeIcon.textContent = '☀️';
-  }
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
 }
 
 function toggleTheme() {
-  document.body.classList.toggle('dark-mode');
-  const isDark = document.body.classList.contains('dark-mode');
-  themeIcon.textContent = isDark ? '☀️' : '🌙';
+  const isDark = !document.body.classList.contains('dark-mode');
+  applyTheme(isDark);
   localStorage.setItem('tictactoe_theme', isDark ? 'dark' : 'light');
 }
 

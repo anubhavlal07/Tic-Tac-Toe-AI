@@ -1,12 +1,12 @@
 {
   "name": "Tic Tac Toe AI",
   "short_name": "TicTacToe",
-  "description": "Play Tic Tac Toe against an unbeatable AI with Material Design",
+  "description": "Play Tic Tac Toe against a trap-setting AI that never loses",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#667eea",
-  "theme_color": "#2196F3",
-  "orientation": "portrait",
+  "background_color": "#f4f1ea",
+  "theme_color": "#f4f1ea",
+  "orientation": "any",
   "icons": [
     {
       "src": "./icon-192.png",
