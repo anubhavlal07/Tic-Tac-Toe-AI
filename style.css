@@ -99,7 +99,8 @@ button:focus-visible,
         "top"
         "score"
         "board"
-        "status";
+        "status"
+        "insights";
     gap: 14px;
     animation: rise 0.6s var(--ease) both;
 }
@@ -131,7 +132,15 @@ button:focus-visible,
     color: var(--muted);
 }
 
-.theme-toggle {
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+}
+
+.tool-btn {
+    position: relative;
     flex: none;
     width: 44px;
     height: 44px;
@@ -144,12 +153,48 @@ button:focus-visible,
     transition: transform 0.2s var(--ease), background-color 0.3s var(--ease);
 }
 
+.tool-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.theme-toggle {
+    order: 100;
+}
+
 .theme-toggle:hover {
     transform: rotate(-12deg);
 }
 
-.theme-toggle:active {
+.tool-btn:active {
     transform: scale(0.92);
+}
+
+.tool-btn:not(.theme-toggle)[aria-pressed="true"] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+}
+
+.tool-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.tool-btn .tool-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--x);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
 }
 
 .theme-icon {
@@ -300,9 +345,150 @@ body.dark-mode .icon-sun {
 
 .board {
     grid-area: board;
+    position: relative;
     display: flex;
     justify-content: center;
     perspective: 1200px;
+}
+
+.board-overlay {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: var(--board);
+    height: var(--board);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.status-extra {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+}
+
+.status-extra:empty {
+    display: none;
+}
+
+.insights {
+    grid-area: insights;
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+}
+
+.insights:empty {
+    display: none;
+}
+
+.insight-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    gap: 8px;
+    animation: rise 0.4s var(--ease) both;
+}
+
+.insight-card h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.insight-card p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
+.mini-board {
+    --mini: 132px;
+    width: var(--mini);
+    height: var(--mini);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    padding: 4px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    flex: none;
+}
+
+.mini-cell {
+    display: grid;
+    place-items: center;
+    background: var(--surface);
+    border-radius: 6px;
+}
+
+.mini-cell.mini-line {
+    background: var(--x-soft);
+}
+
+.mini-cell.mini-bad {
+    box-shadow: inset 0 0 0 2px var(--x);
+    background: var(--x-soft);
+}
+
+.mini-cell.mini-good {
+    box-shadow: inset 0 0 0 2px var(--o);
+    background: var(--o-soft);
+}
+
+.mini-cell.mini-focus {
+    box-shadow: inset 0 0 0 2px var(--focus);
+}
+
+.link-btn {
+    margin-top: 14px;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 6px 0;
+}
+
+.link-btn:hover {
+    color: var(--ink);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--bg);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: transform 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+
+.btn:hover {
+    opacity: 0.88;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 .game-grid {
@@ -377,13 +563,17 @@ body.dark-mode .icon-sun {
     animation: draw 0.4s var(--ease-spring) both;
 }
 
+.game-grid:not([data-local="true"]) .game-cell {
+    cursor: default;
+}
+
 @media (hover: hover) and (pointer: fine) {
-    .game-grid:not(:has(.win-line, .tie)) .game-cell:not(.x):not(.o):hover {
+    .game-grid[data-local="true"] .game-cell:not(.x):not(.o):hover {
         transform: translateY(-2px);
         box-shadow: var(--shadow-md);
     }
 
-    .game-grid:not(:has(.win-line, .tie)) .game-cell:not(.x):not(.o):hover::after {
+    .game-grid[data-local="true"][data-turn="O"] .game-cell:not(.x):not(.o):hover::after {
         width: 58cqw;
         height: 58cqw;
         border-radius: 50%;
@@ -391,18 +581,35 @@ body.dark-mode .icon-sun {
         transform: translate(-50%, -50%);
         opacity: 0.16;
     }
+
+    .game-grid[data-local="true"][data-turn="X"] .game-cell:not(.x):not(.o):hover::before,
+    .game-grid[data-local="true"][data-turn="X"] .game-cell:not(.x):not(.o):hover::after {
+        width: 62cqw;
+        height: 11cqw;
+        border-radius: 99px;
+        background: var(--x);
+        opacity: 0.16;
+    }
+
+    .game-grid[data-local="true"][data-turn="X"] .game-cell:not(.x):not(.o):hover::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .game-grid[data-local="true"][data-turn="X"] .game-cell:not(.x):not(.o):hover::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
 }
 
-.game-cell:not(.x):not(.o):active {
+.game-grid[data-local="true"] .game-cell:not(.x):not(.o):active {
     transform: scale(0.96);
 }
 
-.win-line.won {
+.win-line.win-o {
     background: var(--o-soft);
     box-shadow: inset 0 0 0 2px var(--o);
 }
 
-.win-line.tie {
+.win-line.win-x {
     background: var(--x-soft);
     box-shadow: inset 0 0 0 2px var(--x);
 }
@@ -415,7 +622,7 @@ body.dark-mode .icon-sun {
     opacity: 0.4;
 }
 
-.game-cell.tie:not(.win-line) {
+.game-cell.draw {
     opacity: 0.55;
 }
 
@@ -507,7 +714,7 @@ body.dark-mode .icon-sun {
     transform: translateY(-2px);
 }
 
-.player-card[data-choice="ai"]:hover {
+.player-card.tone-x:hover {
     border-color: var(--x);
 }
 
@@ -525,8 +732,63 @@ body.dark-mode .icon-sun {
     background: var(--o-soft);
 }
 
-.ai-icon {
+.tone-x .player-icon {
     background: var(--x-soft);
+}
+
+.tone-xo .player-icon {
+    background: linear-gradient(135deg, var(--x-soft), var(--o-soft));
+}
+
+.mark-pair {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.mode-svg {
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+}
+
+.mode-svg svg {
+    width: 26px;
+    height: 26px;
+}
+
+.sheet-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.sheet-close {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+}
+
+.sheet-close[hidden],
+.game-modal-subtitle[hidden] {
+    display: none;
+}
+
+.sheet-body {
+    margin-top: 4px;
+    max-height: min(70dvh, 640px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.mode-options {
+    margin-top: 20px;
 }
 
 .player-text {
@@ -638,6 +900,21 @@ body.dark-mode .icon-sun {
     }
 }
 
+@media (max-width: 400px) {
+    .title {
+        font-size: 1.35rem;
+    }
+
+    .toolbar {
+        gap: 4px;
+    }
+
+    .tool-btn {
+        width: 38px;
+        height: 38px;
+    }
+}
+
 @media (max-width: 360px) {
     .reset {
         padding: 0 14px;
@@ -665,8 +942,12 @@ body.dark-mode .icon-sun {
     }
 
     .player-selection {
-        grid-template-columns: 1fr auto 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         align-items: stretch;
+    }
+
+    .sheet-wide .game-modal {
+        max-width: 720px;
     }
 
     .player-card {
@@ -699,12 +980,13 @@ body.dark-mode .icon-sun {
         max-width: 1080px;
         width: auto;
         grid-template-columns: auto var(--side);
-        grid-template-rows: 1fr auto auto auto auto 1fr;
+        grid-template-rows: 1fr auto auto auto auto auto 1fr;
         grid-template-areas:
             "board ."
             "board top"
             "board score"
             "board status"
+            "board insights"
             "board legend"
             "board .";
         column-gap: var(--col-gap);

@@ -47,17 +47,96 @@ An unbeatable Tic-Tac-Toe game featuring a sophisticated AI opponent powered by 
 
 ```
 Tic-Tac-Toe-AI/
-├── index.html          # Main HTML structure
-├── trap_ai.js          # Trap-setting perfect-play AI
-├── style.css           # Responsive layout and light/dark themes
-├── index.js            # Game logic and UI interactions
-├── minimax_algo.js     # AI implementation with Minimax algorithm
+├── index.html          # Markup, layout slots and script/style tags
+├── style.css           # Core layout and light/dark themes
+├── index.js            # UI layer (window.UI): sheet, toolbar, slots, scores, theme
+├── game.js             # Game core (window.Game): state, events, modes
+├── trap_ai.js          # Trap-setting perfect-play AI (window.TrapAI)
+├── features/           # One .js + .css pair per feature, loaded after the core
+│   ├── mode-ai.js      # "Vs Trap AI" mode
+│   ├── mode-local.js   # Two players on one device
+│   ├── mode-online.js  # Online play over WebRTC
+│   ├── history.js      # Streaks and game history
+│   ├── coach.js        # Explains the move that lost the game
+│   ├── timer.js        # Timed turns
+│   ├── sound.js        # Sound effects and vibration
+│   ├── winline.js      # Animated line through the winning cells
+│   └── replay.js       # Step-by-step replay of finished games
 ├── manifest.json       # PWA manifest configuration
 ├── sw.js               # Service worker for offline support
 ├── icon-192.png        # App icon (192x192)
 ├── icon-512.png        # App icon (512x512)
 └── README.md           # Documentation
 ```
+
+## 🧩 Architecture
+
+The game is split into a small core and independent feature files. Features never call each other directly; they listen to `Game` events and draw into `UI` slots.
+
+### `Game` (game.js)
+
+| Member | Purpose |
+|---|---|
+| `Game.state` | `{ board, moves, turn, first, active, modeId, options, result, session }`. Board cells are `"X"`, `"O"` or `null`. |
+| `Game.on(event, fn)` | Subscribe; returns an unsubscribe function. `fn(payload, state)`. |
+| `Game.emit(event, payload)` | Fire an event, including custom ones such as `timer:tick`. |
+| `Game.start(modeId, options)` | Start a new game. `options.first` is `"X"` or `"O"`. |
+| `Game.play(index, player, source)` | Place a mark if legal. `source` is `"local"`, `"ai"`, `"remote"` or `"timeout"`. |
+| `Game.abort(reason)` | Stop the current game without a result. |
+| `Game.later(ms, fn)` | `setTimeout` that is skipped if the game was restarted or ended. |
+| `Game.isLocal(player)` / `Game.isLocalTurn()` | Whether a player is controlled on this device. |
+| `Game.perspective()` | The symbol the person on this device plays, or `null` in two-player mode. |
+| `Game.names()` | `{ X, O }` display names. |
+| `Game.registerMode(def)` / `Game.modes()` / `Game.mode()` | Mode registry. |
+
+Events:
+
+| Event | Payload |
+|---|---|
+| `start` | `{ modeId, options, first, names, perspective }` |
+| `turn` | `{ player, local, moveNumber }` |
+| `move` | `{ index, player, source, board, moveNumber }` |
+| `end` | Result record (below) |
+| `abort` | `{ reason }` |
+| `modes` | `{ modes }` |
+
+Result record, also the shape stored by history:
+
+```js
+{ id, at, modeId, options, first, moves: [{ index, player }], winner, line, outcome, perspective, names }
+```
+
+`winner` is `"X"`, `"O"` or `null`; `outcome` is `"win"`, `"loss"`, `"draw"` from the local player's view, or `null` in two-player mode.
+
+Mode definition:
+
+```js
+Game.registerMode({
+  id, label, hint, icon, tone, note, order,
+  options: [{ label, hint, icon, tone, value }],
+  renderOptions(container, start, { back, sheet }) {},
+  names(state), isLocal(player, state), perspective(state),
+  setup(game, options), onTurn(player, game), teardown(game),
+  turnText(player, state), endText(result, state),
+});
+```
+
+`icon` is `"x"`, `"o"`, `"xo"` or an SVG string; `tone` is `"x"`, `"o"` or `"xo"`. Use either `options` (simple choice cards) or `renderOptions` (custom UI that calls `start(options)`).
+
+### `UI` (index.js)
+
+| Member | Purpose |
+|---|---|
+| `UI.el(tag, attrs, ...children)` | Small DOM helper; `on*` attrs become listeners, `html` sets innerHTML. |
+| `UI.markEl(player, size)` | CSS-drawn X or O mark. |
+| `UI.status(text)` / `UI.toast(text, ms)` | Status line and toast. |
+| `UI.openSheet({ title, subtitle, content, dismissible, onClose, wide })` | Modal sheet; returns `{ body, close, setTitle }`. |
+| `UI.addToolbarButton({ id, label, icon, onClick, pressed, order })` | Icon button in the header toolbar. `pressed` makes it a toggle. |
+| `UI.slot(name)` | `"toolbar"`, `"insights"` (cards under the status bar), `"overlay"` (layer over the board) or `"status-extra"` (inside the status bar). |
+| `UI.miniBoard(board, { marks, line, size, label })` | Small read-only board. `marks[i]` is `"good"`, `"bad"` or `"focus"`. |
+| `UI.openNewGame({ modeId })` | Open the new-game picker. |
+
+Shared CSS classes: `.insight-card`, `.btn`, `.btn-ghost`, `.link-btn`, `.player-card`, `.player-selection`, `.tool-badge`.
 
 ## 🚀 Getting Started
 
