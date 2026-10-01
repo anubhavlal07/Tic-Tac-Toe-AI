@@ -12,22 +12,31 @@ An unbeatable Tic-Tac-Toe game featuring a sophisticated AI opponent powered by 
 - **Trap AI** (`trap_ai.js`): Never loses, and among all non-losing moves picks the one most likely to make you blunder into a fork, always winning as fast as possible. A perfect player can still force a draw, since Tic-Tac-Toe is a solved draw
 - **Strategic Gameplay**: Perfect decision-making that adapts to your moves
 - **Difficulty Options**: Choose who starts first - you or the AI
+- **Loss Coach**: After a loss, see the exact move that lost, the move that would have held the draw, and a move-by-move review
+
+### 🎮 Game Modes
+- **Vs Trap AI**: The unbeatable opponent
+- **Two Players**: Pass the device between turns, with names, alternating starters and a session tally
+- **Play Online**: Create a room, share a 6-letter code or invite link, and play a friend peer-to-peer over WebRTC (PeerJS). Needs an internet connection; no server of our own
+- **Timed Turns**: Optional 3, 5 or 10 second clock; when it runs out a random move is played for you
 
 ### 🎨 Modern Design
 - **Editorial UI**: Warm paper and ink palette with CSS-drawn X and O marks
 - **Dark Mode**: Follows your system theme by default, with a manual toggle
 - **Adaptive Layout**: Single column with a bottom-sheet picker on phones; board beside a side panel on desktops, tablets in landscape and phones in landscape
-- **Animated Win Lines**: The winning line lights up and the rest of the board fades
+- **Animated Win Lines**: A stroke draws through the winning cells while the rest of the board fades
+- **Sound and Vibration**: Synthesized move and result sounds plus haptics on phones, with a mute toggle
 - **Smooth Transitions**: Board flips on a new game; motion is reduced when the OS asks for it
 
 ### 📊 Progress Tracking
 - **Score Persistence**: Tracks wins, losses, and ties using localStorage
-- **Statistics Dashboard**: View your performance history at a glance
+- **Streaks and History**: Unbeaten streak against the AI, best streak, and the last 100 games in every mode
+- **Replay**: Step through any finished game move by move, with autoplay and keyboard controls
 - **Cross-Session Memory**: Your stats persist even after closing the browser
 
 ### 📱 Progressive Web App (PWA)
 - **Installable**: Add to home screen on mobile and desktop devices
-- **Offline Support**: Play anytime, anywhere with service worker caching
+- **Offline Support**: Every mode except online play works offline with service worker caching
 - **App-Like Experience**: Runs in standalone mode like a native app
 - **Fast Loading**: Optimized assets and caching for instant startup
 
